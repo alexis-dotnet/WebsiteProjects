@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<ejs-grid id="Grid" dataSource="@ViewBag.DataSource" width="372">
+    <e-grid-columns>
+        <e-grid-column field="PaymentDate" headerText="Fecha Pago" textAlign="Center" width="120" format="y-MMM-dd"></e-grid-column>
+        <e-grid-column field="Amount" headerText="Monto" width="100" format="C2" textAlign="Right"></e-grid-column>
+        <e-grid-column headerText="Foto" template="#templateImg" width="70"></e-grid-column>
+        <e-grid-column headerText="Comentario" template="#templateComment" width="80"></e-grid-column>
+    </e-grid-columns>
+</ejs-grid>
+<br />
+<div id="container" style="height:400px;">
+    <ejs-button id="primarybtn" cssClass="e-primary" content="Subir nuevo pago"></ejs-button>
+    <ejs-dialog id='dialog' isModal="true" width="300px" overlayClick="onOverlayClick" content="This is a modal dialog" target="#container"></ejs-dialog>
+</div>
+
+<style>
+    .image img {
+        height: 24px;
+        width: 24px;
+    }
+</style>
+
+<script id="templateImg" type="text/x-template">
+    <div class="image">
+        ${if(FileName === '')}
+        <a href="/images/${FileName}" target="_blank">
+            <img src="/images/picture.svg" alt="Ver foto" />
+        </a>
+        ${else}
+        <span>Sin foto</span>
+        ${/if}
+    </div>
+</script>
+
+<script id="templateComment" type="text/x-template">
+    <div class="image">
+        ${if(Comment === '')}
+        <a href="/images/${Comment}" target="_blank">
+            <img src="/images/comment.svg" alt="Ver foto" />
+        </a>
+        ${else}
+        <span>Sin foto</span>
+        ${/if}
+    </div>
+</script>
+
+<script>
+
+    document.getElementById('primarybtn').onclick = function () {
+        var dialog = document.getElementById("dialog").ej2_instances[0];
+        dialog.show();
+    };
+
+    function onOverlayClick() {
+        var dialog = document.getElementById("dialog").ej2_instances[0];
+        dialog.hide();
+    }
+
+</script>
