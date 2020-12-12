@@ -1,29 +1,97 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
+@using Syncfusion.EJ2
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-</div>
+@{
+    var asyncSettings = new Syncfusion.EJ2.Inputs.UploaderAsyncSettings { SaveUrl = @Url.Content("~/Uploader/Save"), RemoveUrl = @Url.Content("~/Uploader/Remove") };
+}
 
-<ejs-grid id="Grid" dataSource="@ViewBag.DataSource" width="372">
-    <e-grid-columns>
-        <e-grid-column field="PaymentDate" headerText="Fecha Pago" textAlign="Center" width="120" format="y-MMM-dd"></e-grid-column>
-        <e-grid-column field="Amount" headerText="Monto" width="100" format="C2" textAlign="Right"></e-grid-column>
-        <e-grid-column headerText="Foto" template="#templateImg" width="70"></e-grid-column>
-        <e-grid-column headerText="Comentario" template="#templateComment" width="80"></e-grid-column>
-    </e-grid-columns>
-</ejs-grid>
+<ejs-button id="primarybtn" cssClass="e-primary" content="Subir nuevo pago"></ejs-button>
 <br />
+<br />
+<table>
+    <tr>
+        <td>
+            <ejs-grid id="Grid" dataSource="@ViewBag.DataSource" width="372">
+                <e-grid-columns>
+                    <e-grid-column field="PaymentDate" headerText="Fecha Pago" textAlign="Center" width="120" format="y-MMM-dd"></e-grid-column>
+                    <e-grid-column field="Amount" headerText="Monto" width="100" format="C2" textAlign="Right"></e-grid-column>
+                    <e-grid-column headerText="Foto" template="#templateImg" width="70"></e-grid-column>
+                    <e-grid-column headerText="Comentario" template="#templateComment" width="80"></e-grid-column>
+                </e-grid-columns>
+            </ejs-grid>
+        </td>
+        <td style="vertical-align: top">
+            <div style="margin-left: 20px">
+                <table style="padding: 10px">
+                    <tr>
+                        <td>
+                            <h4>Total Pagado:</h4>
+                        </td>
+                        <td style="text-align: right">
+                            <h4>&nbsp;$ @ViewBag.TotalPayed</h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <h4>Total Pendiente:</h4>
+                        </td>
+                        <td style="text-align: right">
+                            <h4>&nbsp;$ @ViewBag.TotalToPay</h4>
+                        </td>
+                    </tr>
+                </table>
+                <div class="col-lg-8 control-section">
+                    <div class="control_wrapper">
+                        <ejs-uploader id="UploadFiles" removing="onFileRemove" dropArea=".control-fluid" autoUpload="true" asyncSettings="@asyncSettings">
+                        </ejs-uploader>
+                    </div>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
 <div id="container" style="height:400px;">
-    <ejs-button id="primarybtn" cssClass="e-primary" content="Subir nuevo pago"></ejs-button>
-    <ejs-dialog id='dialog' isModal="true" width="300px" overlayClick="onOverlayClick" content="This is a modal dialog" target="#container"></ejs-dialog>
+    <ejs-dialog id='dialog' isModal="true" width="300px" overlayClick="onOverlayClick" content="This is a modal dialog" target="#container" beforeOpen="validation">
+        <e-dialog-buttons>
+            <e-dialog-dialogbutton buttonModel="@ViewBag.DialogButtonsOk" click="dlgButtonClick"></e-dialog-dialogbutton>
+            <e-dialog-dialogbutton buttonModel="@ViewBag.DialogButtonsCancel" click="dlgButtonClick"></e-dialog-dialogbutton>
+        </e-dialog-buttons>
+        <e-content-template>
+            <table style="margin-left: 20px">
+                <tr>
+                    <td>
+                        <label>Valor</label>
+                        <input type="number" />
+                    </td>
+                </tr>
+            </table>
+        </e-content-template>
+    </ejs-dialog>
 </div>
 
 <style>
     .image img {
         height: 24px;
         width: 24px;
+    }
+</style>
+<style>
+    .control_wrapper {
+        max-width: 400px;
+        margin: auto;
+    }
+
+    .e-upload {
+        width: 100%;
+        position: relative;
+        margin-top: 15px;
+    }
+
+    .control_wrapper .e-upload .e-upload-drag-hover {
+        margin: 0;
     }
 </style>
 
@@ -51,16 +119,10 @@
     </div>
 </script>
 
+<script src="~/js/site.js"></script>
 <script>
-
-    document.getElementById('primarybtn').onclick = function () {
-        var dialog = document.getElementById("dialog").ej2_instances[0];
-        dialog.show();
-    };
-
-    function onOverlayClick() {
-        var dialog = document.getElementById("dialog").ej2_instances[0];
-        dialog.hide();
+    function onFileRemove(args) {
+        args.postRawFile = false;
     }
-
+    var dropElement = document.getElementsByClassName('control-fluid')[0];
 </script>
